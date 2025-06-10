@@ -1,0 +1,43 @@
+# === Python ===
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.egg
+*.egg-info/
+*.log
+.Python
+.env
+.venv
+env/
+venv/
+dist/
+build/
+
+# === IDEs / Editors ===
+.vscode/
+.idea/
+*.swp
+*.sublime-project
+*.sublime-workspace
+
+# === OS Files ===
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+
+# === StarCraft II Specific ===
+*.SC2Replay
+*.SC2Map
+*.SC2Interface
+*.SC2Data
+*.temp/
+.replays/
+.logs/
+
+# === Temporary or Debug Files ===
+*.tmp
+*.bak
+*.old

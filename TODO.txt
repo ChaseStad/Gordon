@@ -1,0 +1,57 @@
+Deal with Creep
+
+Deal with burrowed units
+
+I probably need to save some scans
+
+I need a function to check income(even just like Are we making any minerals or not)
+	This could be used to attack with what little units we have towards the end of the game
+	I could really use this to figure out like how many geysers we need 
+
+Attack Ideas:
+	Early Game:
+		Block Expansions with Mines
+	Mid Game:
+		Drops:
+			Drop Tank/Marine mix on bases
+			Drop Mines on Bases
+		Cloaked Banshee Attacks
+			I'm kind of wondering if we could do some like crazy grid that keeps them seperated from scans or something
+	End Game:
+		Nuke?
+
+Set down turrets at the mineral lines
+
+Keep track of in game time to know when like certain markers should hit for enemy attacks and such
+
+
+
+Possibly mess with other libraries(Honestly fuck this who the fuck needs them[Alright maybe the map shit later])
+
+
+
+
+
+My own distribute workers function
+
+My own speed mining function
+
+Some way to make the bot follow a build order
+(Honestly a tool to convert a tool from the SALT shit to a build order for the bot would hit)
+
+Maybe before I work on micro I get macro down for each race or maybe I just start making the micro bot now and kind just go back and forth and work on each of them
+
+I might legit need to just fucking make a github library for my own shit because its getting out of hand 
+
+I need to start making gas later into the game
+
+Need to make is so that the bot will replace destroyed buildings
+
+Need to make it so the bot will finish buildings where the worker was killed
+
+
+
+
+
+
+
