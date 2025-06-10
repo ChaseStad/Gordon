@@ -191,6 +191,13 @@ class BuildingManager:
                 print(f"Unknown spawn position: {cc.position}")
                 return None
 
+    def findType(self, building):
+        if building == UnitTypeId.BARRACKS or building == UnitTypeId.FACTORY or building == UnitTypeId.STARPORT or building == UnitTypeId.ENGINEERINGBAY or building == UnitTypeId.ARMORY:
+            return self.barracksPositions, self.pendingBarracksPositions
+
+        if building == UnitTypeId.SUPPLYDEPOT:
+            return self.depotPositions, self.pendingDepotPositions
+
     
     def populateBuildingPositions(self):
         if self.map == "AbyssalReefAIE":

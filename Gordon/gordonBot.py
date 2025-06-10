@@ -76,15 +76,7 @@ class ChaseBot(BotAI):
             cc = None
 
         
-        for scv in self.units(UnitTypeId.SCV):
-            if scv.orders:
-                for order in scv.orders:
-                    if order.ability.id == AbilityId.TERRANBUILD_BARRACKS or order.ability.id == AbilityId.TERRANBUILD_FACTORY or order.ability.id == AbilityId.TERRANBUILD_STARPORT or order.ability.id == AbilityId.TERRANBUILD_ENGINEERINGBAY or order.ability.id == AbilityId.TERRANBUILD_ARMORY:
-                        if order.target not in self.BM.pendingBarracksPositions:
-                            self.BM.pendingBarracksPositions.append(order.target)
-                    if order.ability.id == AbilityId.TERRANBUILD_SUPPLYDEPOT:
-                        if order.target not in self.BM.pendingDepotPositions:
-                            self.BM.pendingDepotPositions.append(order.target)
+
 
 
 
@@ -102,17 +94,34 @@ class ChaseBot(BotAI):
             if self.can_afford(UnitTypeId.ORBITALCOMMAND):
                 self.do(cc(AbilityId.UPGRADETOORBITAL_ORBITALCOMMAND))        
         
+        
         await self.expand()
+        
         await self.doUpgrades()
-        #await self.buildFactory(ccs)
-        #await self.buildStarport(ccs)
+        
+        
         await self.buildArmory(cc)
         await self.trainSCVs(ccs)
-        await self.buildSupplyDepots(cc)
         
-        await self.buildBarracks(ccs)        
-        await self.buildEngineeringBay()
-        await self.buildGas(cc,ccs)
+        if self.units(UnitTypeId.SCV):
+            await self.buildSupplyDepots(cc)
+            await self.buildStarport(ccs)
+            await self.buildFactory(ccs)
+            await self.buildBarracks(ccs)        
+            await self.buildEngineeringBay()
+            await self.buildGas(cc,ccs)
+
+        for scv in self.units(UnitTypeId.SCV):
+            if scv.orders:
+                for order in scv.orders:
+                    if order.ability.id == AbilityId.TERRANBUILD_BARRACKS or order.ability.id == AbilityId.TERRANBUILD_FACTORY or order.ability.id == AbilityId.TERRANBUILD_STARPORT or order.ability.id == AbilityId.TERRANBUILD_ENGINEERINGBAY or order.ability.id == AbilityId.TERRANBUILD_ARMORY:
+                        if order.target not in self.BM.pendingBarracksPositions:
+                            self.BM.pendingBarracksPositions.append(order.target)
+                    if order.ability.id == AbilityId.TERRANBUILD_SUPPLYDEPOT:
+                        if order.target not in self.BM.pendingDepotPositions:
+                            self.BM.pendingDepotPositions.append(order.target)
+
+        
         await self.addAddons()       
         await self.trainArmy()        
 
@@ -158,110 +167,50 @@ class ChaseBot(BotAI):
                     self.do(cc.train(UnitTypeId.SCV))
                     break
 
-    async def buildBarracks(self,ccs):
-        if self.firstDepot and self.can_afford(UnitTypeId.BARRACKS) and not self.structures(UnitTypeId.BARRACKS).idle and ccs.amount * 3 >= self.structures(UnitTypeId.BARRACKS).amount:
-            worker = self.select_build_worker(self.townhalls.first.position)
-            barracks_position = None
+    async def chaseBuild(self,building):
+        if self.units:
+            worker = self.select_build_worker(self.townhalls.first.position) #We might want top change this later to find the most efficent worker
+            position = None
             if worker:
-                for position in self.BM.barracksPositions:
-                    if position not in self.BM.pendingBarracksPositions:
-                        barracks_position = Point2(position)
+                buildingPositions, pendingPositions = self.BM.findType(building)
+                for pos in buildingPositions:
+                    if pos not in pendingPositions:
+                        position = Point2(pos)
                         break
-                if barracks_position != None:
-                    worker.build(UnitTypeId.BARRACKS, position)
-        
+                if position != None:
+                    worker.build(building, position)
+
+    async def buildBarracks(self,ccs):
+        if self.firstDepot and self.can_afford(UnitTypeId.BARRACKS) and not self.structures(UnitTypeId.BARRACKS).idle:
+            await self.chaseBuild(UnitTypeId.BARRACKS)
 
     async def buildEngineeringBay(self):
         if self.supply_used > 50 and (self.structures(UnitTypeId.ENGINEERINGBAY).amount + self.already_pending(UnitTypeId.ENGINEERINGBAY)) < 2 and self.can_afford(UnitTypeId.ENGINEERINGBAY) and self.already_pending(UnitTypeId.BARRACKS) < 2 and len(self.BM.barracksPositions) > 0 :
-            worker = self.select_build_worker(self.townhalls.first.position)
-            barracks_position = None
-            if worker:
-                for position in self.BM.barracksPositions:
-                    if position not in self.BM.pendingBarracksPositions:
-                        barracks_position = Point2(position)
-                        break
-                if barracks_position != None:
-                    worker.build(UnitTypeId.ENGINEERINGBAY, position)
+            await self.chaseBuild(UnitTypeId.ENGINEERINGBAY)
                                            
-
-
     async def buildFactory(self,ccs):
         if not self.already_pending(UnitTypeId.FACTORY) and self.can_afford(UnitTypeId.FACTORY) and self.structures(UnitTypeId.BARRACKS).ready.amount >= 1 and len(self.BM.barracksPositions) > 0 and not self.structures(UnitTypeId.FACTORY).idle and self.structures(UnitTypeId.FACTORY).amount < ccs.amount:
-            worker = self.select_build_worker(self.townhalls.first.position)
-            factory_position = None
-            if worker:
-                for position in self.BM.barracksPositions:
-                    if position not in self.BM.pendingBarracksPositions:
-                        factory_position = Point2(position)
-                        break
-                if factory_position != None:
-                    worker.build(UnitTypeId.FACTORY, position)
+            await self.chaseBuild(UnitTypeId.FACTORY)
                     
-
     async def buildStarport(self,ccs):
         if not self.already_pending(UnitTypeId.STARPORT) and self.structures(UnitTypeId.FACTORY).ready.amount >= 1 and len(self.BM.barracksPositions) > 0 and self.townhalls and self.structures(UnitTypeId.STARPORT).amount < ccs.amount :
-            worker = self.select_build_worker(self.townhalls.first.position)
-            starport_position = None
-            if worker:
-                for position in self.BM.barracksPositions:
-                    if position not in self.BM.pendingBarracksPositions:
-                        starport_position = Point2(position)
-                        break
-                if starport_position != None:
-                    worker.build(UnitTypeId.STARPORT, position)
+            await self.chaseBuild(UnitTypeId.STARPORT)
                     
-    
     async def buildArmory(self,cc):
         if self.already_pending_upgrade(UpgradeId.TERRANINFANTRYWEAPONSLEVEL1) and self.already_pending_upgrade(UpgradeId.TERRANINFANTRYARMORSLEVEL1) and self.structures(UnitTypeId.ARMORY).amount == 0 and cc:
-            worker = self.select_build_worker(self.townhalls.first.position)
-            barracks_position = None
-            if worker:
-                for position in self.BM.barracksPositions:
-                    if position not in self.BM.pendingBarracksPositions:
-                        barracks_position = Point2(position)
-                        break
-                if barracks_position != None:
-                    worker.build(UnitTypeId.ARMORY, position)
+            await self.chaseBuild(UnitTypeId.ARMORY)
                     
     async def buildSupplyDepots(self,cc):
         if not self.firstDepot and not self.already_pending(UnitTypeId.SUPPLYDEPOT) and cc:
-            worker = self.select_build_worker(self.townhalls.first.position)
-            depot_position = None
-            if worker:
-                for position in self.BM.depotPositions:
-                    if position not in self.BM.pendingDepotPositions:
-                        depot_position = Point2(position)
-                        break
-                if depot_position != None:
-                    worker.build(UnitTypeId.SUPPLYDEPOT, position)
-                
-                if worker.build(UnitTypeId.SUPPLYDEPOT, depot_position):
-                    self.firstDepot = True
+            await self.chaseBuild(UnitTypeId.SUPPLYDEPOT)
+            self.firstDepot = True
                         
 
         if self.firstDepot and self.supply_used >= self.supply_cap and not self.already_pending(UnitTypeId.SUPPLYDEPOT):
-            if self.units and self.townhalls:
-                worker = self.select_build_worker(self.townhalls.first.position)
-                depot_position = None
-                if worker:
-                    for position in self.BM.depotPositions:
-                        if position not in self.BM.pendingDepotPositions:
-                            depot_position = Point2(position)
-                            break
-                    if depot_position != None:
-                        worker.build(UnitTypeId.SUPPLYDEPOT, position)
+            await self.chaseBuild(UnitTypeId.SUPPLYDEPOT)
                     
         elif self.firstDepot and self.supply_used > self.supply_cap - 10 and self.supply_used > 25 and self.supply_cap != 200:
-            if self.units and self.townhalls:
-                worker = self.select_build_worker(self.townhalls.first.position)
-                depot_position = None
-                if worker:
-                    for position in self.BM.depotPositions:
-                        if position not in self.BM.pendingDepotPositions:
-                            depot_position = Point2(position)
-                            break
-                    if depot_position != None:
-                        worker.build(UnitTypeId.SUPPLYDEPOT, position)            
+            await self.chaseBuild(UnitTypeId.SUPPLYDEPOT)           
                         
                 
 
@@ -292,7 +241,7 @@ class ChaseBot(BotAI):
 
 
     async def buildGas(self,cc,ccs):
-        if self.supply_used >= 16 and self.structures(UnitTypeId.REFINERY).amount < 1 or ccs.amount >= 2 and self.structures(UnitTypeId.REFINERY).amount < 2:
+        if self.supply_used >= 16 and self.structures(UnitTypeId.REFINERY).amount < 1 or ccs.amount  > self.structures(UnitTypeId.REFINERY).amount * 2:
             if self.can_afford(UnitTypeId.REFINERY) and cc is not None:
                 vgs = self.vespene_geyser.closer_than(15.0,cc)
                 for vg in vgs:
@@ -365,17 +314,6 @@ class ChaseBot(BotAI):
             if mfs:
                 mf: Unit = max(mfs, key=lambda x: x.mineral_contents)
                 self.do(orbital(AbilityId.CALLDOWNMULE_CALLDOWNMULE, mf))
-
-
-
-    async def medivacAttack(self):
-        pass
-
-    async def loadMedivac(self):
-        pass
-
-    async def unloadMedivac(self):
-        pass
 
     async def siegeTanks(self):
         tanks = self.units(UnitTypeId.SIEGETANK)
