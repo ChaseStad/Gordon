@@ -299,7 +299,7 @@ class ChaseBot(BotAI):
     async def whipLazyWorkers(self,cc):
         for scv in self.workers.idle:
             if cc:
-                closest_mineral = self.mineral_field.closest_to(cc)
+                closest_mineral = self.mineral_field.closest_to(cc) #This breaks based on the absence of a mineral field I think but I am not sure its possibly the absence of a cc but I already check that Match ID: 3946314
                 if closest_mineral:
                     scv.gather(closest_mineral)
     

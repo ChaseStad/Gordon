@@ -13,7 +13,7 @@ class BuildingManager:
         self.spawn = None
 
     def detectSpawn(self, mapPick, cc):
-        if mapPick == "InterloperAIE": #REMEMBER TO DO THIS
+        if mapPick == "InterloperAIE":
             self.map = "InterloperAIE"
             topSpawn = Point2((26.5, 137.5))
             bottomSpawn = Point2((125.5, 30.5))
@@ -27,7 +27,7 @@ class BuildingManager:
                 print(f"Unknown spawn position: {cc.position}")
                 return None
 
-        if mapPick == "ThunderbirdAIE": #REMEMBER TO DO THIS
+        if mapPick == "ThunderbirdAIE":
             self.map = "ThunderbirdAIE"
             topSpawn = Point2((38.5, 133.5))
             bottomSpawn = Point2((153.5, 22.5))
@@ -41,7 +41,7 @@ class BuildingManager:
                 print(f"Unknown spawn position: {cc.position}")
                 return None 
         print(mapPick)
-        if mapPick == "PylonAIE": #REMEMBER TO DO THIS
+        if mapPick == "PylonAIE":
             print("IT WORKED")
             self.map = "PylonAIE"
             topSpawn = Point2((72.5, 171.5))
@@ -58,7 +58,7 @@ class BuildingManager:
                 print(f"Unknown spawn position: {cc.position}")
                 return None 
         
-        if mapPick == "TorchesAIE": #REMEMBER TO DO THIS
+        if mapPick == "TorchesAIE": 
             self.map = "TorchesAIE"
             topSpawn = Point2((124.5, 159.5))
             bottomSpawn = Point2((124.5, 48.5))
@@ -72,7 +72,7 @@ class BuildingManager:
                 print(f"Unknown spawn position: {cc.position}")
                 return None
 
-        if mapPick == "PersephoneAIE": #REMEMBER TO DO THIS
+        if mapPick == "PersephoneAIE": 
             self.map = "PersephoneAIE"
             topSpawn = Point2((37.5, 145.5))
             bottomSpawn = Point2((37.5, 34.5))
