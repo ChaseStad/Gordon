@@ -38,6 +38,6 @@ if __name__ == "__main__":
         print(result, " against opponent ", opponentid)
     else:
         print("Starting local game...")
-        run_game(maps.get("PersephoneAIE"), [ChaseBot,Computer(Race.Terran,Difficulty.VeryHard)], realtime=False, save_replay_as=f"lastReplay.SC2Replay")
+        run_game(maps.get("TorchesAIE"), [ChaseBot, Computer(Race.Terran,Difficulty.VeryHard)], realtime=False, save_replay_as=f"lastReplay.SC2Replay")
 
             
