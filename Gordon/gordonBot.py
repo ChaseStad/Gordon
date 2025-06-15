@@ -89,21 +89,23 @@ class ChaseBot(BotAI):
         await self.keepAttacking()
         if self.time < 120:
             await self.defendWorkerRush()
-        #await self.draw(cc)
+        
         for cc in self.townhalls(UnitTypeId.COMMANDCENTER).ready.idle: 
             if self.can_afford(UnitTypeId.ORBITALCOMMAND):
                 self.do(cc(AbilityId.UPGRADETOORBITAL_ORBITALCOMMAND))        
-        
-        
-        await self.expand()
-        
-        await self.doUpgrades()
-        
-        
-        await self.buildArmory(cc)
-        await self.trainSCVs(ccs)
-        
-        if self.units(UnitTypeId.SCV):
+        productionFacs: Units = self.structures.filter(
+            lambda cc: cc.type_id in {
+            UnitTypeId.BARRACKS,
+            UnitTypeId.FACTORY,
+            UnitTypeId.STARPORT,
+            }
+        )        
+        if productionFacs.amount >= ccs.amount * 3 or self.supply_used == 200:
+            await self.expand()
+        else:
+            await self.doUpgrades()
+            await self.buildArmory(cc)
+            await self.trainSCVs(ccs)
             await self.buildSupplyDepots(cc)
             await self.buildStarport(ccs)
             await self.buildFactory(ccs)
@@ -126,7 +128,8 @@ class ChaseBot(BotAI):
         await self.trainArmy()        
 
         await self.defend_base()
-        await self.harrass()
+        if self.supply_used < 100 or self.supply_used == 200:
+            await self.harrass()
         await self.attacks()
         #await self.draw2(cc)
         await self.controlMedivacs()
@@ -155,20 +158,22 @@ class ChaseBot(BotAI):
 
             pos=Point3((item.position[0],item.position[1],self.get_terrain_z_height(item))),        # Can be a Point2 or Point3
             size=12,                   # Optional: font size
-            color=(255, 255, 0)
-)     
+            color=(255, 255, 0))
+         
         
 
     async def trainSCVs(self,ccs):
         total_workers = self.units(UnitTypeId.SCV).amount
         if self.can_afford(UnitTypeId.SCV) and (self.units(UnitTypeId.SCV).amount < (ccs.amount * 16) + (self.structures(UnitTypeId.REFINERY).amount * 3)):
             for cc in self.townhalls.ready.idle:
-                if self.can_afford(UnitTypeId.SCV) and total_workers < 85:
+                if self.can_afford(UnitTypeId.SCV) and total_workers < 80:
                     self.do(cc.train(UnitTypeId.SCV))
                     break
 
     async def chaseBuild(self,building):
-        if self.units:
+        if not self.townhalls:
+            return 
+        if self.units(UnitTypeId.SCV):
             worker = self.select_build_worker(self.townhalls.first.position) #We might want top change this later to find the most efficent worker
             position = None
             if worker:
@@ -181,19 +186,19 @@ class ChaseBot(BotAI):
                     worker.build(building, position)
 
     async def buildBarracks(self,ccs):
-        if self.firstDepot and self.can_afford(UnitTypeId.BARRACKS) and not self.structures(UnitTypeId.BARRACKS).idle:
-            await self.chaseBuild(UnitTypeId.BARRACKS)
+        if self.firstDepot and self.can_afford(UnitTypeId.BARRACKS):
+            await self.chaseBuild(UnitTypeId.BARRACKS) 
 
     async def buildEngineeringBay(self):
         if self.supply_used > 50 and (self.structures(UnitTypeId.ENGINEERINGBAY).amount + self.already_pending(UnitTypeId.ENGINEERINGBAY)) < 2 and self.can_afford(UnitTypeId.ENGINEERINGBAY) and self.already_pending(UnitTypeId.BARRACKS) < 2 and len(self.BM.barracksPositions) > 0 :
             await self.chaseBuild(UnitTypeId.ENGINEERINGBAY)
                                            
     async def buildFactory(self,ccs):
-        if not self.already_pending(UnitTypeId.FACTORY) and self.can_afford(UnitTypeId.FACTORY) and self.structures(UnitTypeId.BARRACKS).ready.amount >= 1 and len(self.BM.barracksPositions) > 0 and not self.structures(UnitTypeId.FACTORY).idle and self.structures(UnitTypeId.FACTORY).amount < ccs.amount:
+        if not self.already_pending(UnitTypeId.FACTORY) and self.can_afford(UnitTypeId.FACTORY) and self.structures(UnitTypeId.BARRACKS).ready.amount >= 2 and len(self.BM.barracksPositions) > 0 and not self.structures(UnitTypeId.FACTORY).idle and self.structures(UnitTypeId.FACTORY).amount < ccs.amount:
             await self.chaseBuild(UnitTypeId.FACTORY)
                     
     async def buildStarport(self,ccs):
-        if not self.already_pending(UnitTypeId.STARPORT) and self.structures(UnitTypeId.FACTORY).ready.amount >= 1 and len(self.BM.barracksPositions) > 0 and self.townhalls and self.structures(UnitTypeId.STARPORT).amount < ccs.amount :
+        if not self.already_pending(UnitTypeId.STARPORT) and self.structures(UnitTypeId.FACTORY).ready.amount >= 2 and len(self.BM.barracksPositions) > 0 and self.townhalls and self.structures(UnitTypeId.STARPORT).amount < ccs.amount :
             await self.chaseBuild(UnitTypeId.STARPORT)
                     
     async def buildArmory(self,cc):
@@ -241,7 +246,7 @@ class ChaseBot(BotAI):
 
 
     async def buildGas(self,cc,ccs):
-        if self.supply_used >= 16 and self.structures(UnitTypeId.REFINERY).amount < 1 or ccs.amount  > self.structures(UnitTypeId.REFINERY).amount * 2:
+        if self.supply_used >= 16 and self.structures(UnitTypeId.REFINERY).amount < 1 or self.structures(UnitTypeId.REFINERY).amount < ccs.amount / 2 and self.structures(UnitTypeId.REFINERY).amount >= 1:
             if self.can_afford(UnitTypeId.REFINERY) and cc is not None:
                 vgs = self.vespene_geyser.closer_than(15.0,cc)
                 for vg in vgs:
@@ -273,7 +278,7 @@ class ChaseBot(BotAI):
         for star in self.structures(UnitTypeId.STARPORT).ready.idle:
             addon = self.structures.find_by_tag(star.add_on_tag)
             if addon and addon.name == "StarportTechLab":
-                pass
+                self.do(star.train(UnitTypeId.BATTLECRUISER))
             else:
                 self.do(star.train(UnitTypeId.MEDIVAC))
 
@@ -288,12 +293,13 @@ class ChaseBot(BotAI):
         for fac in self.structures(UnitTypeId.FACTORY):
             self.do(fac.build(UnitTypeId.FACTORYTECHLAB))        
 
-
+        for fac in self.structures(UnitTypeId.STARPORT):
+            self.do(fac.build(UnitTypeId.STARPORTTECHLAB))
 
     async def whipLazyWorkers(self,cc):
         for scv in self.workers.idle:
             if cc:
-                closest_mineral = self.mineral_field.closest_to(cc)
+                closest_mineral = self.mineral_field.closest_to(cc) #This breaks based on the absence of a mineral field I think but I am not sure its possibly the absence of a cc but I already check that Match ID: 3946314
                 if closest_mineral:
                     scv.gather(closest_mineral)
     
@@ -515,6 +521,9 @@ class ChaseBot(BotAI):
         for tank in self.units(UnitTypeId.SIEGETANK):
             if self.UM.get_role(tank) == "nothing":
                 self.UM.assign_role(tank, "army")
+        for bc in self.units(UnitTypeId.BATTLECRUISER):
+            if self.UM.get_role(bc) == "nothing":
+                self.UM.assign_role(bc, "army")
 
 
     async def doUpgrades(self):

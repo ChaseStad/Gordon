@@ -26,7 +26,7 @@ Keep track of in game time to know when like certain markers should hit for enem
 
 
 
-Possibly mess with other libraries(Honestly fuck this who the fuck needs them[Alright maybe the map shit later])
+Possibly mess with other libraries(Honestly fuck this who the fuck needs them[Alright maybe the map stuff later])
 
 
 
@@ -37,11 +37,11 @@ My own distribute workers function
 My own speed mining function
 
 Some way to make the bot follow a build order
-(Honestly a tool to convert a tool from the SALT shit to a build order for the bot would hit)
+(Honestly a tool to convert a tool from the SALT stuff to a build order for the bot would hit)
 
 Maybe before I work on micro I get macro down for each race or maybe I just start making the micro bot now and kind just go back and forth and work on each of them
 
-I might legit need to just fucking make a github library for my own shit because its getting out of hand 
+I might legit need to just fucking make a github library for my own stuff because its getting out of hand 
 
 I need to start making gas later into the game
 

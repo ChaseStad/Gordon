@@ -13,7 +13,7 @@ class BuildingManager:
         self.spawn = None
 
     def detectSpawn(self, mapPick, cc):
-        if mapPick == "InterloperAIE": #REMEMBER TO DO THIS
+        if mapPick == "InterloperAIE":
             self.map = "InterloperAIE"
             topSpawn = Point2((26.5, 137.5))
             bottomSpawn = Point2((125.5, 30.5))
@@ -27,7 +27,7 @@ class BuildingManager:
                 print(f"Unknown spawn position: {cc.position}")
                 return None
 
-        if mapPick == "ThunderbirdAIE": #REMEMBER TO DO THIS
+        if mapPick == "ThunderbirdAIE":
             self.map = "ThunderbirdAIE"
             topSpawn = Point2((38.5, 133.5))
             bottomSpawn = Point2((153.5, 22.5))
@@ -41,7 +41,7 @@ class BuildingManager:
                 print(f"Unknown spawn position: {cc.position}")
                 return None 
         print(mapPick)
-        if mapPick == "PylonAIE": #REMEMBER TO DO THIS
+        if mapPick == "PylonAIE":
             print("IT WORKED")
             self.map = "PylonAIE"
             topSpawn = Point2((72.5, 171.5))
@@ -58,7 +58,7 @@ class BuildingManager:
                 print(f"Unknown spawn position: {cc.position}")
                 return None 
         
-        if mapPick == "TorchesAIE": #REMEMBER TO DO THIS
+        if mapPick == "TorchesAIE": 
             self.map = "TorchesAIE"
             topSpawn = Point2((124.5, 159.5))
             bottomSpawn = Point2((124.5, 48.5))
@@ -72,7 +72,7 @@ class BuildingManager:
                 print(f"Unknown spawn position: {cc.position}")
                 return None
 
-        if mapPick == "PersephoneAIE": #REMEMBER TO DO THIS
+        if mapPick == "PersephoneAIE": 
             self.map = "PersephoneAIE"
             topSpawn = Point2((37.5, 145.5))
             bottomSpawn = Point2((37.5, 34.5))
@@ -388,14 +388,14 @@ class BuildingManager:
 
 
                 self.barracksPositions = [
-                    Point2((75.5, 126.5)), Point2((106.5, 145.5)), Point2((75.5, 137.5)),
-                    Point2((82.5, 122.5)), Point2((133.5, 149.5)), Point2((112.5, 159.5)),
-                    Point2((126.5, 149.5)), Point2((112.5, 164.5)), Point2((68.5, 137.5)),
-                    Point2((82.5, 137.5)), Point2((75.5, 142.5)), Point2((68.5, 132.5)),
-                    Point2((112.5, 154.5)), Point2((99.5, 150.5)), Point2((106.5, 140.5)),
-                    Point2((99.5, 145.5)), Point2((126.5, 154.5)), Point2((112.5, 169.5)),
-                    Point2((119.5, 149.5)), Point2((85.5, 155.5)), Point2((82.5, 127.5)),
-                    Point2((119.5, 154.5)), Point2((92.5, 150.5)), Point2((82.5, 132.5))
+                    Point2((133.5, 149.5)), Point2((112.5, 159.5)), Point2((112.5, 164.5)),   
+                    Point2((112.5, 169.5)), Point2((112.5, 154.5)), Point2((75.5, 137.5)),    
+                    Point2((126.5, 149.5)),  Point2((68.5, 137.5)), Point2((75.5, 126.5)),
+                    Point2((82.5, 137.5)),  Point2((75.5, 142.5)),  Point2((68.5, 132.5)),
+                     Point2((99.5, 150.5)),  Point2((106.5, 140.5)), Point2((82.5, 122.5)),
+                    Point2((99.5, 145.5)),  Point2((126.5, 154.5)), Point2((106.5, 145.5)),
+                    Point2((119.5, 149.5)), Point2((85.5, 155.5)),  Point2((82.5, 127.5)),
+                    Point2((119.5, 154.5)), Point2((92.5, 150.5)),  Point2((82.5, 132.5))
                 ]
 
 
@@ -449,9 +449,9 @@ class BuildingManager:
 
                 self.barracksPositions = [
                     Point2((44.5, 139.5)), Point2((44.5, 144.5)), Point2((44.5, 134.5)),
-                    Point2((44.5, 129.5)), Point2((37.5, 134.5)), Point2((67.5, 138.5)),
+                    Point2((44.5, 129.5)), Point2((44.5, 149.5)), Point2((67.5, 138.5)),
                     Point2((51.5, 139.5)), Point2((74.5, 142.5)), Point2((74.5, 132.5)),
-                    Point2((44.5, 149.5)), Point2((81.5, 127.5)), Point2((51.5, 134.5)),
+                    Point2((37.5, 134.5)), Point2((81.5, 127.5)), Point2((51.5, 134.5)),
                     Point2((74.5, 127.5)), Point2((81.5, 132.5)), Point2((67.5, 143.5)),
                     Point2((65.5, 116.5)), Point2((37.5, 139.5)), Point2((67.5, 131.5)),
                     Point2((74.5, 137.5)), Point2((30.5, 139.5)), Point2((67.5, 121.5)),
@@ -479,14 +479,14 @@ class BuildingManager:
 
 
                 self.barracksPositions = [
-                    Point2((75.5, 43.5)), Point2((44.5, 50.5)), Point2((49.5,35.5)),
-                    Point2((68.5, 58.5)), Point2((51.5, 45.5)), Point2((75.5, 38.5)),
+                    Point2((44.5, 35.5)), Point2((44.5, 50.5)), Point2((44.5, 45.5)),
+                    Point2((44.5, 30.5)), Point2((44.5, 40.5)), Point2((75.5, 38.5)),
                     Point2((82.5, 48.5)), Point2((68.5, 36.5)), Point2((68.5, 48.5)),
                     Point2((37.5, 45.5)), Point2((75.5, 53.5)), Point2((82.5, 53.5)),
-                    Point2((30.5, 40.5)), Point2((44.5, 35.5)), Point2((51.5, 40.5)),
+                    Point2((30.5, 40.5)), Point2((75.5, 43.5)), Point2((51.5, 40.5)),
                     Point2((37.5, 40.5)), Point2((61.5, 36.5)), Point2((75.5, 48.5)),
-                    Point2((73.5, 31.5)), Point2((44.5, 45.5)), Point2((44.5, 30.5)),
-                    Point2((68.5, 53.5)), Point2((44.5, 40.5)), Point2((68.5, 41.5))
+                    Point2((73.5, 31.5)), Point2((49.5,35.5)),  Point2((68.5, 58.5)),
+                    Point2((68.5, 53.5)), Point2((51.5, 45.5)), Point2((68.5, 41.5))
                 ]
  
 
