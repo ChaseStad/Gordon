@@ -1,12 +1,31 @@
+Alright So the map Torches needs changes to the building layouts I think
+
+I might make a system to make picking the building location based off like whatever is closest to the CC but this will take time and maybe if we just order things better it will be fine but I feel like that is not the right solution, I think I may make these easier to read by add them to another folder or something and then just read from that folder so it can be like a long list instead of a block that's kind of annoying me
+
+I need to edit like the way I make workers to make sure that I can put down the supply depot earlier to make the build better
+
+Superskill score differences vs BenBotBC 6/15/25
+	Military [48.7]
+	Economy [9.4]
+	Technology [21]
+
+I need a way to look for buildings that are flying like maybe after 45 mins I make a liberator and have it just run around the map
+	Might need to self kill units for this
+
+
+
 Deal with Creep
 
-Deal with burrowed units
+Deal with burrowed Units
+
+Deal with Invisible Units
 
 I probably need to save some scans
 
 I need a function to check income(even just like Are we making any minerals or not)
 	This could be used to attack with what little units we have towards the end of the game
 	I could really use this to figure out like how many geysers we need 
+	This might be in library I saw them talking about it in the AIArena Discord
 
 Attack Ideas:
 	Early Game:
@@ -40,8 +59,6 @@ Some way to make the bot follow a build order
 (Honestly a tool to convert a tool from the SALT stuff to a build order for the bot would hit)
 
 Maybe before I work on micro I get macro down for each race or maybe I just start making the micro bot now and kind just go back and forth and work on each of them
-
-I might legit need to just fucking make a github library for my own stuff because its getting out of hand 
 
 I need to start making gas later into the game
 

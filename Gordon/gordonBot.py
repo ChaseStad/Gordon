@@ -131,7 +131,7 @@ class ChaseBot(BotAI):
         if self.supply_used < 100 or self.supply_used == 200:
             await self.harrass()
         await self.attacks()
-        #await self.draw2(cc)
+        
         await self.controlMedivacs()
         if self.units:
             self.UM.remove_dead_units(self.units)
@@ -142,7 +142,8 @@ class ChaseBot(BotAI):
         
 
         await self.lowerDepots()
-        try: #This breaks in long games and its annoying as hell
+        
+        try: #This was causing crashes but then I put it in this Try/Except and it stopped causing crashes I've never seen the chat message maybe it was happening after the game or something
             await self.distribute_workers()
         except:
             await self.chat_send("Distribute Workers didn't work for some reason")
@@ -156,7 +157,7 @@ class ChaseBot(BotAI):
             self._client.debug_text_world(
             text=f"{item.position}",
 
-            pos=Point3((item.position[0],item.position[1],self.get_terrain_z_height(item))),        # Can be a Point2 or Point3
+            pos=Point3((item.position[0],item.position[1],self.get_terrain_z_height(item))),        
             size=12,                   # Optional: font size
             color=(255, 255, 0))
          
@@ -164,7 +165,7 @@ class ChaseBot(BotAI):
 
     async def trainSCVs(self,ccs):
         total_workers = self.units(UnitTypeId.SCV).amount
-        if self.can_afford(UnitTypeId.SCV) and (self.units(UnitTypeId.SCV).amount < (ccs.amount * 16) + (self.structures(UnitTypeId.REFINERY).amount * 3)):
+        if self.can_afford(UnitTypeId.SCV):
             for cc in self.townhalls.ready.idle:
                 if self.can_afford(UnitTypeId.SCV) and total_workers < 80:
                     self.do(cc.train(UnitTypeId.SCV))
@@ -398,6 +399,10 @@ class ChaseBot(BotAI):
         for unit in scout_units:
             if unit.is_idle:
                 self.do(unit.attack(target))
+
+    
+
+
 
 
 
